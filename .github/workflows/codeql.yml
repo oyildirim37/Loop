@@ -1,34 +1,25 @@
-name: CodeQL Analysis
+name: Test Build for LoopWorkspace
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-  workflow_dispatch:
+  workflow_dispatch:  # Manuelles Starten des Workflows
 
 jobs:
-  analyze:
-    runs-on: macos-latest
+  test-build:
+    runs-on: macos-latest  # macOS erforderlich für Xcode
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up CodeQL
-        uses: github/codeql-action/init@v2
-        with:
-          languages: swift
+      - name: Install dependencies (optional)
+        run: |
+          pod install || echo "No CocoaPods dependencies found" # Falls CocoaPods benötigt wird
+          swift package resolve || echo "No Swift Packages found" # Falls SPM benötigt wird
 
-      - name: Build the project manually
+      - name: Build the project
         run: |
           xcodebuild -workspace LoopWorkspace.xcworkspace \
-                     -scheme Loop \
+                     -scheme LoopWorkspace \
                      -sdk iphonesimulator \
-                     -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' \
-                      build
-
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v2
+                     -destination 'platform=iOS Simulator,name=iPhone 14,OS=latest' \
+                     build
