@@ -28,7 +28,7 @@ jobs:
                      -scheme LoopWorkspace \
                      -sdk iphonesimulator \
                      -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' \
-                     clean build
+                      build
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
