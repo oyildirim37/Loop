@@ -20,10 +20,7 @@ jobs:
           cd LoopWorkspace
           git submodule update --init --recursive
 
-      - name: Install dependencies (CocoaPods)
-        run: |
-          cd LoopWorkspace
-          pod install
+
 
       - name: Build Loop App for Simulator
         run: |
