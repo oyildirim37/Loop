@@ -17,10 +17,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: |
-          cd LoopWorkspace
-          pod install
 
       - name: Build Loop iOS App Only
         run: |
