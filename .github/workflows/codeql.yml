@@ -25,7 +25,7 @@ jobs:
       - name: Build the project manually
         run: |
           xcodebuild -workspace LoopWorkspace.xcworkspace \
-                     -scheme LoopWorkspace \
+                     -scheme Loop \
                      -sdk iphonesimulator \
                      -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' \
                       build
