@@ -1,16 +1,17 @@
-name: List Xcode Schemas
+name: Debug Schemas and Configurations
 
 on:
-  workflow_dispatch:  # Ermöglicht das manuelle Ausführen des Workflows
+  workflow_dispatch:
 
 jobs:
-  list-schemas:
-    runs-on: macos-latest  # macOS-Runner erforderlich für Xcode
+  debug-schemas:
+    runs-on: macos-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: List Xcode Schemas
+      - name: List all available schemes
         run: |
+          echo "Listing all available schemes and configurations..."
           xcodebuild -list -workspace LoopWorkspace.xcworkspace
