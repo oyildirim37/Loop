@@ -1,20 +1,35 @@
-name: Test Build Only
+name: Build Loop App Automatically
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:  # Manuelles Starten des Workflows
 
 jobs:
-  test-build:
-    runs-on: macos-latest
+  build-loop:
+    runs-on: macos-latest  # macOS erforderlich für Xcode
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Attempt to build using LoopWorkspace
+      - name: Set environment variables to skip warnings
+        run: echo "SKIP_OPEN_SOURCE_WARNING=1" >> $GITHUB_ENV
+
+      - name: Clone LoopWorkspace and update submodules
         run: |
+          git clone --recurse-submodules https://github.com/LoopKit/LoopWorkspace.git
+          cd LoopWorkspace
+          git submodule update --init --recursive
+
+      - name: Install dependencies (CocoaPods)
+        run: |
+          cd LoopWorkspace
+          pod install
+
+      - name: Build Loop App for Simulator
+        run: |
+          cd LoopWorkspace
           xcodebuild -workspace LoopWorkspace.xcworkspace \
-                     -scheme LoopWorkspace \
+                     -scheme Loop \
                      -sdk iphonesimulator \
                      -destination 'platform=iOS Simulator,name=iPhone 14,OS=latest' \
-                     build-for-testing
+                     build
