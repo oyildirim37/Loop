@@ -1,28 +1,28 @@
 name: Build Loop App Automatically
 
 on:
-  workflow_dispatch:  # Manuelles Starten des Workflows
+  push:  # Automatischer Start bei jedem Push
+    branches:
+      - main  # Nur auf dem Branch "main". Weitere Branches können hinzugefügt werden.
+  pull_request:  # Automatischer Start bei Pull Requests
+    branches:
+      - main  # Nur wenn der PR auf "main" abzielt.
+  workflow_dispatch:  # Manuelles Starten bleibt weiterhin möglich
 
 jobs:
   build-loop:
-    runs-on: macos-latest  # macOS erforderlich für Xcode
+    runs-on: macos-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set environment variables to skip warnings
-        run: echo "SKIP_OPEN_SOURCE_WARNING=1" >> $GITHUB_ENV
-
-      - name: Clone LoopWorkspace and update submodules
+      - name: Install dependencies
         run: |
-          git clone --recurse-submodules https://github.com/LoopKit/LoopWorkspace.git
           cd LoopWorkspace
-          git submodule update --init --recursive
+          pod install
 
-
-
-      - name: Build Loop App for Simulator
+      - name: Build Loop iOS App Only
         run: |
           cd LoopWorkspace
           xcodebuild -workspace LoopWorkspace.xcworkspace \
